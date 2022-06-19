@@ -1,7 +1,7 @@
 version: '2.4'
 services:
-    rsu:
-        hostname: rsu
+    rsu1:
+        hostname: rsu1
         restart: always
         image: code.nap.av.it.pt:5050/mobility-networks/vanetza:latest
         cap_add:
