@@ -13,6 +13,7 @@ services:
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_CAM_PERIODICITY=0
         networks:
             vanetzalan0:
                 ipv4_address: 192.168.98.11
@@ -33,6 +34,7 @@ services:
              - VANETZA_INTERFACE=br0
              - START_EMBEDDED_MOSQUITTO=true
              - SUPPORT_MAC_BLOCKING=true
+             - VANETZA_CAM_PERIODICITY=0
          networks:
              vanetzalan0:
                  ipv4_address: 192.168.98.12
@@ -52,6 +54,7 @@ services:
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_CAM_PERIODICITY=0
         networks:
             vanetzalan0:
                 ipv4_address: 192.168.98.111
@@ -71,6 +74,7 @@ services:
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_CAM_PERIODICITY=0
         networks:
             vanetzalan0:
                 ipv4_address: 192.168.98.112
@@ -90,6 +94,7 @@ services:
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_CAM_PERIODICITY=0
         networks:
             vanetzalan0:
                 ipv4_address: 192.168.98.113
@@ -109,6 +114,7 @@ services:
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_CAM_PERIODICITY=0
         networks:
             vanetzalan0:
                 ipv4_address: 192.168.98.114
@@ -128,6 +134,7 @@ services:
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_CAM_PERIODICITY=0
         networks:
             vanetzalan0:
                 ipv4_address: 192.168.98.115
