@@ -96,11 +96,11 @@ def on_message(client, userdata, msg):
     # lat = message["latitude"]
     # ...
 
-subcause1 = random.randint(0,4)
-subcause2 = random.randint(0,4)
-subcause3 = random.randint(0,4)
-subcause4 = random.randint(0,4)
-subcause5 = random.randint(0,4)
+subcause1 = random.randint(1,4)
+subcause2 = random.randint(1,4)
+subcause3 = random.randint(1,4)
+subcause4 = random.randint(1,4)
+subcause5 = random.randint(1,4)
 
 def generate(client, id):
 
@@ -204,6 +204,10 @@ t3.join()
 t4.join()
 
 
+f = open("end_simul.txt", "w")
+f.write("False")
+f.close()
+
 while(True):
     if not len(list_routes_coordinates[0]) and not len(list_routes_coordinates[1]) and not len(list_routes_coordinates[2]) and not len(list_routes_coordinates[3]):
         break
@@ -224,3 +228,7 @@ print("Car 3 disconnected")
 
 car4.loop_stop()
 print("Car 4 disconnected")
+
+f = open("end_simul.txt", "w")
+f.write("True")
+f.close()
