@@ -1,4 +1,3 @@
-from cmd import IDENTCHARS
 import json
 import paho.mqtt.client as mqtt
 import threading
@@ -20,8 +19,9 @@ import numpy as np
 import osmnx as ox
 import random
 
-place = "Aveiro, Aveiro, Portugal"
-G = ox.graph_from_place(place, network_type="drive")
+place = "Aveiro, Portugal"
+#G = ox.graph_from_place(place, network_type="drive")
+G = ox.graph_from_point((40.641250894859645, -8.65358752576108), dist=3000, network_type="drive")
 
 Gp = ox.project_graph(G)
 
@@ -46,6 +46,9 @@ for i in range(4):
     route = ox.shortest_path(G, list_start_end[i][0], list_start_end[i][1], weight="length")
     list_routes_nodes.append(route)
 
+rc = ['r', 'y', 'c', 'g']
+fig, ax = ox.plot_graph_routes(G, list_routes_nodes, route_colors=rc, route_linewidth=6, node_size=0, show=False, close=False)
+
 list_routes_coordinates=[]
 for route in range(4):
     route = list_routes_nodes[i]
@@ -61,8 +64,15 @@ for route in range(4):
 ########################################## CHECK DISTANCES from CANS ########################################
 
 import math
+import matplotlib.pyplot as plt
 
-coord_garbage_cans = [(40.6375271, -8.6441449), (40.6433476, -8.6550174), (40.6295116, -8.6599187), (40.6588927, -8.6151016), (40.5740063, -8.5930985)]
+coord_garbage_cans = [(40.631709, -8.6875641), (40.6258137, -8.6448027), (40.639794, -8.6435776), (40.621431, -8.6291841), (40.6669451, -8.6258256), (40.6451389, -8.6435942), (40.6327564, -8.6374649)]
+
+for coord in coord_garbage_cans:
+    plt.plot(coord[1],coord[0], marker="o", markersize=10, markeredgecolor="red", markerfacecolor="green", zorder=10)
+
+plt.show()
+
 
 def proximity(coord):
     for idx, x in enumerate(coord_garbage_cans):
@@ -77,7 +87,6 @@ def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     client.subscribe("vanetza/out/cam")
     client.subscribe("vanetza/out/denm")
-    # ...
 
 
 # É chamada automaticamente sempre que recebe uma mensagem nos tópicos subscritos em cima
@@ -93,6 +102,10 @@ subcause2 = random.randint(1,4)
 subcause3 = random.randint(1,4)
 subcause4 = random.randint(1,4)
 subcause5 = random.randint(1,4)
+subcause6 = random.randint(1,4)
+subcause7 = random.randint(1,4)
+
+list_subcauses = [subcause1, subcause2, subcause3, subcause4, subcause5, subcause6, subcause7]
 
 def generate(client, id):
 
@@ -113,32 +126,14 @@ def generate(client, id):
         if ret[0] is True:
             f = open('../vanetza/examples/in_denm.json')
             m = json.load(f)
-            if ret[1] == 0:
-                m["management"]["eventPosition"]["latitude"] = coord_garbage_cans[0][0]
-                m["management"]["eventPosition"]["longitude"] = coord_garbage_cans[0][1]
-                m["situation"]["eventType"]["subCauseCode"] = subcause1
-            if ret[1] == 1:
-                m["management"]["eventPosition"]["latitude"] = coord_garbage_cans[1][0]
-                m["management"]["eventPosition"]["longitude"] = coord_garbage_cans[1][1]
-                m["situation"]["eventType"]["subCauseCode"] = subcause2
-            if ret[1] == 2:
-                m["management"]["eventPosition"]["latitude"] = coord_garbage_cans[2][0]
-                m["management"]["eventPosition"]["longitude"] = coord_garbage_cans[2][1]
-                m["situation"]["eventType"]["subCauseCode"] = subcause3
-            if ret[1] == 3:
-                m["management"]["eventPosition"]["latitude"] = coord_garbage_cans[3][0]
-                m["management"]["eventPosition"]["longitude"] = coord_garbage_cans[3][1]
-                m["situation"]["eventType"]["subCauseCode"] = subcause4
-            if ret[1] == 4:
-                m["management"]["eventPosition"]["latitude"] = coord_garbage_cans[4][0]
-                m["management"]["eventPosition"]["longitude"] = coord_garbage_cans[4][1]
-                m["situation"]["eventType"]["subCauseCode"] = subcause5
+            m["management"]["eventPosition"]["latitude"] = coord_garbage_cans[ret[1]][0]
+            m["management"]["eventPosition"]["longitude"] = coord_garbage_cans[ret[1]][1]
+            m["situation"]["eventType"]["subCauseCode"] = list_subcauses[ret[1]]
             mes = json.dumps(m)
             client.publish("vanetza/in/denm",mes)
             f.close()
     
         sleep(0.5)
-
 
 
 car1 = mqtt.Client()

@@ -3,13 +3,16 @@ import paho.mqtt.client as mqtt
 import threading
 from time import sleep
 import sys
+import matplotlib.pyplot as plt
 
 ############################################## GENERATE COORDINATES ########################################
 import numpy as np
 import osmnx as ox
 
-place = "Aveiro, Aveiro, Portugal"
-G = ox.graph_from_place(place, network_type="drive")
+place = "Aveiro, Portugal"
+#G = ox.graph_from_place(place, network_type="drive")
+G = ox.graph_from_point((40.641250894859645, -8.65358752576108), dist=3000, network_type="drive")
+
 Gp = ox.project_graph(G)
 print(list(G))
 
@@ -24,13 +27,15 @@ nodes, dists = ox.nearest_nodes(Gp, X, Y, return_dist=True)
 node = ox.nearest_nodes(Gp, X0, Y0)
 
             #   node            coordinates     status
-garbage_nodes = [5208801375, 5244032108, 4961599480, 9764485095, 1801672819]
-garbage_coordinates = [(40.6375271, -8.6441449), (40.6433476, -8.6550174), (40.6295116, -8.6599187), (40.6588927, -8.6151015), (40.5740063, -8.5930985)]
+garbage_nodes = [26019653, 1272483346, 1485115748, 1563067182, 1709796842, 4874785502, 9840860673]
+
+garbage_coordinates = [(40.631709, -8.6875641), (40.6258137, -8.6448027), (40.639794, -8.6435776), (40.621431, -8.6291841), (40.6669451, -8.6258256), (40.6451389, -8.6435942), (40.6327564, -8.6374649)]
 # for simulation with obus
-garbage_status = [-1, -1, -1, -1, -1]
+garbage_status = [-1, -1, -1, -1, -1, -1, -1]
 
 # for simulation without obus
-# garbage_status = [-1, -1, 2, -1, 2]
+#garbage_status = [-1, -1, 3, -1, -1, 4, -1]
+#garbage_status = [-1, 4, 3, -1, -1, 4, -1]
 
 ##############################################################################################################
 
@@ -71,16 +76,13 @@ def calc_route():
 
     print(len(route))
 
-    fig, ax =  ox.plot_graph_route(G, route, route_color='y', route_linewidth=6, node_size=0, orig_dest_size=300)
+    fig, ax =  ox.plot_graph_route(G, route, route_color='y', route_linewidth=6, node_size=0, show=False, close=False)
 
-    # fig, ax =  ox.plot_graph_route(G, route[0:30], route_color='y', route_linewidth=6, node_size=0, orig_dest_size=300)
-    # fig, ax =  ox.plot_graph_route(G, route[30:60], route_color='y', route_linewidth=6, node_size=0, orig_dest_size=300)
-    # fig, ax =  ox.plot_graph_route(G, route[60:90], route_color='y', route_linewidth=6, node_size=0, orig_dest_size=300)
-    # fig, ax =  ox.plot_graph_route(G, route[90:120], route_color='y', route_linewidth=6, node_size=0, orig_dest_size=300)
-    # fig, ax =  ox.plot_graph_route(G, route[120:150], route_color='y', route_linewidth=6, node_size=0, orig_dest_size=300)
-    # fig, ax =  ox.plot_graph_route(G, route[150:180], route_color='y', route_linewidth=6, node_size=0, orig_dest_size=300)
-    # fig, ax =  ox.plot_graph_route(G, route[180:210], route_color='y', route_linewidth=6, node_size=0, orig_dest_size=300)
-    # fig, ax =  ox.plot_graph_route(G, route[210:217], route_color='y', route_linewidth=6, node_size=0, orig_dest_size=300)
+    for x in garbage_coordinates:
+        plt.plot(x[1],x[0], marker="o", markersize=10, markeredgecolor="red", markerfacecolor="green", zorder=10)
+
+    plt.show()
+
 
 rsu = mqtt.Client()
 rsu.on_connect = on_connect
@@ -100,8 +102,8 @@ while(True):
 
 print("Simulation ended!")
 
-t1.loop_stop()
-print("RSU Disconected")
+#t1.loop_stop
+#print("RSU Disconected")
 
 print(garbage_status)
 
