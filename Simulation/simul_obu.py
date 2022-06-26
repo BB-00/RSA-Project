@@ -1,3 +1,4 @@
+from cmd import IDENTCHARS
 import json
 import paho.mqtt.client as mqtt
 import threading
@@ -14,15 +15,13 @@ brk3 = 0
 brk4 = 0
 
 
-############################################## GENERATE COORDINATES ########################################
+############################################# GENERATE COORDINATES ########################################
 import numpy as np
 import osmnx as ox
 import random
 
 place = "Aveiro, Aveiro, Portugal"
 G = ox.graph_from_place(place, network_type="drive")
-
-# print(list(G))
 
 Gp = ox.project_graph(G)
 
@@ -57,13 +56,12 @@ for route in range(4):
     list_routes_coordinates.append(list_coordinates)
     print(list_coordinates)
 
-##############################################################################################################
+#############################################################################################################
 
-########################################## CHECK DISTANCES from CANS ####################################################
+########################################## CHECK DISTANCES from CANS ########################################
 
 import math
 
-#                               0%                       25%                        50%                       75%                     100%
 coord_garbage_cans = [(40.6375271, -8.6441449), (40.6433476, -8.6550174), (40.6295116, -8.6599187), (40.6588927, -8.6151016), (40.5740063, -8.5930985)]
 
 def proximity(coord):
@@ -71,10 +69,6 @@ def proximity(coord):
         if math.dist([x[0], x[1]],  [coord[0], coord[1]]) < 0.01:
             return (True, idx)
     return (False, -1)
-
-
-
-#inside if / if dist < Number, publishes denm to the client, block the others
 
 ##############################################################################################################
 
@@ -93,8 +87,6 @@ def on_message(client, userdata, msg):
     print('Topic: ' + msg.topic)
     print('Message' + json.dumps(message))
 
-    # lat = message["latitude"]
-    # ...
 
 subcause1 = random.randint(1,4)
 subcause2 = random.randint(1,4)
@@ -105,26 +97,8 @@ subcause5 = random.randint(1,4)
 def generate(client, id):
 
     if not len(list_routes_coordinates[id-1]):
-        if id==1:# and brk1==0:
-            brk1 = 1
-            print("Car 1 disconnected")
-            #car1.loop_stop()
-            #car1.disconnected()
-        if id==2:# and brk2==0:
-            brk2 = 1
-            print("Car 2 disconnected")
-            #car2.loop_stop()
-            #car2.disconnected()
-        if id==3:# and brk3==0:
-            brk3 = 1
-            print("Car 3 disconnected")
-            #car3.loop_stop()
-            #car3.disconnected()
-        if id==4:# and brk4==0:
-            brk4 = 1
-            print("Car 4 disconnected")
-            #car4.loop_stop()
-            #car4.disconnected()
+        print("Car ", id, " as finished its route!")
+
     else:
         coord = list_routes_coordinates[id-1].pop(0)
         f = open('../vanetza/examples/in_cam.json')

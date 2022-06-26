@@ -26,11 +26,12 @@ node = ox.nearest_nodes(Gp, X0, Y0)
             #   node            coordinates     status
 garbage_nodes = [5208801375, 5244032108, 4961599480, 9764485095, 1801672819]
 garbage_coordinates = [(40.6375271, -8.6441449), (40.6433476, -8.6550174), (40.6295116, -8.6599187), (40.6588927, -8.6151015), (40.5740063, -8.5930985)]
-#garbage_status = [-1, -1, -1, -1, -1]
+# for simulation with obus
+garbage_status = [-1, -1, -1, -1, -1]
 
-garbage_status = [-1, -1, 2, -1, 2]
+# for simulation without obus
+# garbage_status = [-1, -1, 2, -1, 2]
 
-#garbage_status = [2, 2, 2, 2, 2]
 ##############################################################################################################
 
 def on_connect(client, userdata, flags, rc):
@@ -62,9 +63,6 @@ def calc_route():
     for idx, status in enumerate(garbage_status):
         if status>0:
             list_routes.append(garbage_nodes[idx])
-    
-    # for nodes in list_routes:
-    #     route = ox.shortest_path(G, list_routes[i][0], list_routes[i][1], weight="length")
 
     while len(list_routes)-1>0:
         route_a = ox.shortest_path(G, list_routes[0], list_routes[1], weight="length")
@@ -102,8 +100,8 @@ while(True):
 
 print("Simulation ended!")
 
-#t1.loop_stop()
-#print("RSU Disconected")
+t1.loop_stop()
+print("RSU Disconected")
 
 print(garbage_status)
 
